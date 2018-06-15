@@ -6,7 +6,8 @@ import matplotlib.pyplot as plt
 # From https://jeffknupp.com/blog/2014/06/18/improve-your-python-python-classes-and-object-oriented-programming/
 
 def range01(x):
-    return (x - np.min(x)) / (np.max(x) - np.min(x))
+    return (x - np.min(x)) / (float(np.max(x)) - np.min(x))
+
 
 
 class model_plots(object):
@@ -51,8 +52,7 @@ class model_plots(object):
                 # ! Added small proportion to prevent equal decile bounds and reset to 0-1 range (to prevent probs > 1.0)
                 np.random.seed(self.seed)
                 prob_plus_smallrandom = range01(dataset[['prob_' + j]] + (np.random.uniform(size=(n, 1)) / 1000000))
-                dataset["dec_" + j] = 10 - pd.DataFrame(pd.qcut(prob_plus_smallrandom, 10, labels=False),
-                                                        index=self.feature_data[i].index)
+                dataset["dec_" + j] = (10 - pd.DataFrame(pd.qcut(prob_plus_smallrandom.squeeze(), 10, labels=False),index=self.feature_data[i].index))
             # append the different datasets
             final = final.append(dataset)
         return final
@@ -328,3 +328,5 @@ class model_plots(object):
                          color=colors[col], label='%sset' % j)
                 ax4.legend(loc='upper right', shadow=False, frameon=False, fontsize='large')
         return plt
+
+
